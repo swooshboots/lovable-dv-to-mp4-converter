@@ -1,7 +1,15 @@
 import { useCallback, useRef } from "react";
 import { buildFfmpegArgs, type ExportSettings } from "@/lib/converter/buildFfmpegArgs";
 
-const CORE_BASE = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm";
+// Single-threaded ffmpeg core (no SharedArrayBuffer, so no COOP/COEP headers needed).
+// Loaded from a public CDN because ffmpeg-core.wasm (~31 MB) exceeds Cloudflare Pages'
+// 25 MiB per-file limit, so it can't be self-hosted in the static build. jsDelivr is a
+// fallback in case unpkg is down or blocked. Keep the version in sync with @ffmpeg/core.
+const CORE_VERSION = "0.12.10";
+const CORE_BASES = [
+  `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/esm`,
+  `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dist/esm`,
+];
 const MOUNT_DIR = "/mnt";
 
 type FFmpegInstance = {
@@ -29,10 +37,26 @@ export function useFfmpeg() {
     loadingRef.current = (async () => {
       const { FFmpeg } = await import("@ffmpeg/ffmpeg");
       const { toBlobURL } = await import("@ffmpeg/util");
-      const ff = new FFmpeg() as unknown as FFmpegInstance;
-      const coreURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, "text/javascript");
-      const wasmURL = await toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, "application/wasm");
-      await ff.load({ coreURL, wasmURL });
+      let ff: FFmpegInstance | null = null;
+      let lastErr: unknown;
+      for (const base of CORE_BASES) {
+        const candidate = new FFmpeg() as unknown as FFmpegInstance;
+        try {
+          const coreURL = await toBlobURL(`${base}/ffmpeg-core.js`, "text/javascript");
+          const wasmURL = await toBlobURL(`${base}/ffmpeg-core.wasm`, "application/wasm");
+          await candidate.load({ coreURL, wasmURL });
+          ff = candidate;
+          break;
+        } catch (err) {
+          lastErr = err;
+          try {
+            candidate.terminate();
+          } catch {
+            // worker may not have started
+          }
+        }
+      }
+      if (!ff) throw lastErr;
       ffmpegRef.current = ff;
       return ff;
     })().catch((err) => {

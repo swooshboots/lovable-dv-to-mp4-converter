@@ -9,14 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as DownloadWorkerDotjsRouteImport } from './routes/download-worker[.]js'
 import { Route as IndexRouteImport } from './routes/index'
 
-const DownloadWorkerDotjsRoute = DownloadWorkerDotjsRouteImport.update({
-  id: '/download-worker.js',
-  path: '/download-worker.js',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,39 +19,28 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/download-worker.js': typeof DownloadWorkerDotjsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/download-worker.js': typeof DownloadWorkerDotjsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/download-worker.js': typeof DownloadWorkerDotjsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/download-worker.js'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/download-worker.js'
-  id: '__root__' | '/' | '/download-worker.js'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DownloadWorkerDotjsRoute: typeof DownloadWorkerDotjsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/download-worker.js': {
-      id: '/download-worker.js'
-      path: '/download-worker.js'
-      fullPath: '/download-worker.js'
-      preLoaderRoute: typeof DownloadWorkerDotjsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -70,7 +53,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DownloadWorkerDotjsRoute: DownloadWorkerDotjsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

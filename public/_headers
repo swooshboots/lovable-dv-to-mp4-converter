@@ -1,0 +1,13 @@
+# Cloudflare Pages headers. No COOP/COEP: the app uses the single-threaded
+# ffmpeg.wasm core (no SharedArrayBuffer), and COEP would complicate loading
+# the core from the unpkg/jsDelivr CDN.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/download-worker.js
+  Cache-Control: no-store, max-age=0
+  Service-Worker-Allowed: /
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
