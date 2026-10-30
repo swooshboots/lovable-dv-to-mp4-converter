@@ -185,7 +185,7 @@ function Index() {
           </TerminalFrame>
 
           <footer className="terminal-footer">
-            <div className="flex flex-wrap justify-between gap-3"><span className="text-primary">&gt; {running ? "PROCESSING" : "SYSTEM READY"}</span><span>PARADISE RESEARCH STUDIO</span></div>
+            <div className="flex flex-wrap justify-between gap-3"><span className="text-primary">&gt; {running ? "PROCESSING" : !hasQueued && items.some((i) => i.status === "done") ? "COMPLETE" : "SYSTEM READY"}</span><span>PARADISE RESEARCH STUDIO</span></div>
             <p className="mt-3 text-center text-xs text-muted-foreground">
               PRIVACY: YOUR VIDEOS NEVER LEAVE YOUR DEVICE. ALL CONVERSION HAPPENS LOCALLY IN YOUR BROWSER. NOTHING IS UPLOADED, STORED, OR VIEWED BY US. CLOSE THE TAB AND IT'S GONE.
             </p>
