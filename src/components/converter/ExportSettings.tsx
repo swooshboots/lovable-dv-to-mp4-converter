@@ -79,6 +79,9 @@ export function ExportSettingsPanel({ value, onChange, disabled }: Props) {
             onValueChange={([v]) => onChange({ ...value, crf: v })}
             disabled={disabled}
           />
+          <p className="text-xs text-muted-foreground">
+            LOWER = BETTER QUALITY + BIGGER FILE. 23 IS A GOOD DEFAULT.
+          </p>
         </div>
 
         <div className="flex items-center justify-between sm:col-span-2">
