@@ -61,10 +61,24 @@ async function downloadConvertedFile(item: QueueItem) {
   // Ensure correct MIME so the browser renders the <video> element.
   const mp4Blob = blob.type === "video/mp4" ? blob : new Blob([blob], { type: "video/mp4" });
 
+  // Download directly from this page, no pop-up needed.
+  try {
+    const url = URL.createObjectURL(mp4Blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    return;
+  } catch {
+    // fall through to preview tab
+  }
+
   if (!openPreviewTab(mp4Blob, filename)) {
-    throw new Error(
-      "Your browser blocked the new tab. Allow pop-ups for this site, or open the app in a direct tab, then click Download again.",
-    );
+    throw new Error("Your browser blocked the pop-up. Allow pop-ups for this site, then click Download again.");
   }
 }
 
