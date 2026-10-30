@@ -103,21 +103,6 @@ export function ExportSettingsPanel({ value, onChange, disabled }: Props) {
           >[ {value.deinterlace ? "YES" : "NO"} ]</Button>
         </div>
 
-        <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="filename-template">OUTPUT NAME:</Label>
-          <Input
-            id="filename-template"
-            className="terminal-input"
-            value={value.filenameTemplate}
-            onChange={(e) => onChange({ ...value, filenameTemplate: e.target.value })}
-            disabled={disabled}
-            placeholder="{name}.mp4"
-            spellCheck={false}
-          />
-          <p className="text-xs text-muted-foreground">
-            {"{name}"} = ORIGINAL NAME / .MP4 ADDED AUTOMATICALLY
-          </p>
-        </div>
       </div>
     </div>
   );

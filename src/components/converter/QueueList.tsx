@@ -61,7 +61,10 @@ async function downloadConvertedFile(item: QueueItem) {
   // Ensure correct MIME so the browser renders the <video> element.
   const mp4Blob = blob.type === "video/mp4" ? blob : new Blob([blob], { type: "video/mp4" });
 
-  // Download directly from this page, no pop-up needed.
+  // Show a Save As dialog where supported (Chrome/Edge).
+  if (await tryNativeSave(mp4Blob, filename)) return;
+
+  // Otherwise download directly from this page, no pop-up needed.
   try {
     const url = URL.createObjectURL(mp4Blob);
     const link = document.createElement("a");
