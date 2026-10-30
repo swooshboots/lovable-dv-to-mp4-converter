@@ -185,7 +185,7 @@ function Index() {
           </TerminalFrame>
 
           <footer className="terminal-footer">
-            <div className="flex flex-wrap justify-between gap-3"><span className="text-primary">&gt; {running ? "PROCESSING" : "SYSTEM READY"}</span><span>LOCAL PROCESSING / NO UPLOADS</span></div>
+            <div className="flex flex-wrap justify-between gap-3"><span className="text-primary">&gt; {running ? "PROCESSING" : "SYSTEM READY"}</span><span>PARADISE RESEARCH STUDIO</span></div>
           </footer>
         </div>
       </div>
