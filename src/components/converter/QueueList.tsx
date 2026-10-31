@@ -62,7 +62,14 @@ async function downloadConvertedFile(item: QueueItem) {
   const mp4Blob = blob.type === "video/mp4" ? blob : new Blob([blob], { type: "video/mp4" });
 
   // Show a Save As dialog where supported (Chrome/Edge).
-  if (await tryNativeSave(mp4Blob, filename)) return;
+  const pickerStart = Date.now();
+  try {
+    if (await tryNativeSave(mp4Blob, filename)) return;
+  } catch (err) {
+    // A real user cancel takes a moment; an instant abort means the browser
+    // couldn't show the dialog, so fall back to a normal download.
+    if (Date.now() - pickerStart > 1500) throw err;
+  }
 
   // Otherwise download directly from this page, no pop-up needed.
   try {
