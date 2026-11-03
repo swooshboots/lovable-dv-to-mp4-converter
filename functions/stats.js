@@ -10,8 +10,6 @@ const LABELS = {
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
 export async function onRequestGet({ request, env }) {
-  const key = new URL(request.url).searchParams.get("key");
-  if (!env.STATS_KEY || key !== env.STATS_KEY) return new Response("Not found", { status: 404 });
 
   const t = today();
   const d = new Date(t + "T12:00:00Z");
