@@ -1,6 +1,11 @@
-# Cloudflare Pages config (static site, no Functions/Workers).
+# Cloudflare Pages config (static site + anonymous stats Functions in functions/).
 # Only used if you deploy with `wrangler pages deploy`; Git-connected Pages
 # projects read this too, so keep it in sync with the dashboard settings.
 name = "dv-to-mp4-converter"
 pages_build_output_dir = "./dist/client"
 compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dv-stats"
+database_id = "766239a1-7837-49eb-b569-b00782892c02"

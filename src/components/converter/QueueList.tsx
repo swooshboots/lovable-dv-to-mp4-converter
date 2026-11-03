@@ -1,3 +1,4 @@
+import { track } from "@/lib/track";
 import { Button } from "@/components/ui/button";
 
 export type QueueStatus = "queued" | "running" | "done" | "error" | "canceled";
@@ -372,6 +373,7 @@ export function QueueList({ items, onCancel, onRemove, onDownloadError }: Props)
                 size="sm"
                 className="terminal-command terminal-command-primary"
                 onClick={() => {
+                  track("download");
                   void downloadConvertedFile(item).catch((err) => {
                     onDownloadError(item.id, formatDownloadError(err));
                   });

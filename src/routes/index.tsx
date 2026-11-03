@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DropZone } from "@/components/converter/DropZone";
 import { ExportSettingsPanel } from "@/components/converter/ExportSettings";
 import { QueueList, type QueueItem } from "@/components/converter/QueueList";
@@ -11,6 +11,7 @@ import {
   type ExportSettings,
 } from "@/lib/converter/buildFfmpegArgs";
 import { TerminalFrame } from "@/components/converter/TerminalFrame";
+import { track } from "@/lib/track";
 
 function formatConversionError(err: unknown) {
   if (err instanceof Error && err.message) return err.message;
@@ -52,6 +53,7 @@ function Index() {
   const cancelCurrentRef = useRef<(() => void) | null>(null);
   const stopRef = useRef(false);
   const { convert, cancel } = useFfmpeg();
+  useEffect(() => track("pageview"), []);
 
   const addFiles = useCallback((files: File[]) => {
     setItems((prev) => [
@@ -104,11 +106,13 @@ function Index() {
       cancelCurrentRef.current = () => {
         canceledThisItem = true;
       };
+      track("convert_start");
       try {
         const blob = await convert(item.file, snapshot, (p) => {
           updateItem(item.id, { progress: p });
         });
         if (canceledThisItem) continue;
+        track("convert_done");
         updateItem(item.id, {
           status: "done",
           progress: 1,
@@ -117,6 +121,7 @@ function Index() {
         });
       } catch (err) {
         if (canceledThisItem) continue;
+        track("convert_fail");
         updateItem(item.id, {
           status: "error",
           error: formatConversionError(err),
