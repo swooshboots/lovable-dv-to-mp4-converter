@@ -49,6 +49,8 @@ function formatSize(bytes: number) {
   return `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`;
 }
 
+const countedDownloads = new Set<string>();
+
 async function downloadConvertedFile(item: QueueItem) {
   const blob = item.resultBlob;
 
@@ -373,8 +375,12 @@ export function QueueList({ items, onCancel, onRemove, onDownloadError }: Props)
                 size="sm"
                 className="terminal-command terminal-command-primary"
                 onClick={() => {
-                  track("download");
-                  void downloadConvertedFile(item).catch((err) => {
+                  void downloadConvertedFile(item).then(() => {
+                    if (!countedDownloads.has(item.id)) {
+                      countedDownloads.add(item.id);
+                      track("download");
+                    }
+                  }).catch((err) => {
                     onDownloadError(item.id, formatDownloadError(err));
                   });
                 }}
