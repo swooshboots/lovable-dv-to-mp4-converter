@@ -55,7 +55,9 @@ export function ExportSettingsPanel({ value, onChange, disabled }: Props) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="keep">KEEP ORIGINAL</SelectItem>
+              <SelectItem value="25">25 FPS</SelectItem>
               <SelectItem value="30">30 FPS</SelectItem>
+              <SelectItem value="50">50 FPS</SelectItem>
               <SelectItem value="60">60 FPS</SelectItem>
             </SelectContent>
           </Select>

@@ -1,5 +1,5 @@
 export type Resolution = "keep" | "1080" | "720";
-export type FrameRate = "keep" | "30" | "60";
+export type FrameRate = "keep" | "25" | "30" | "50" | "60";
 
 export interface ExportSettings {
   resolution: Resolution;
@@ -40,7 +40,7 @@ export function buildFfmpegArgs(
   settings: ExportSettings,
 ): string[] {
   const filters: string[] = [];
-  if (settings.deinterlace) filters.push("yadif=1");
+  if (settings.deinterlace) filters.push(settings.frameRate === "25" ? "yadif=0" : "yadif=1");
   if (settings.resolution === "1080") filters.push("scale=1920:1080");
   else if (settings.resolution === "720") filters.push("scale=1280:720");
   if (settings.frameRate !== "keep") filters.push(`fps=${settings.frameRate}`);
