@@ -160,7 +160,6 @@ function Index() {
         <TerminalFrame className="terminal-header">
           <header className="py-4">
             <h1 className="text-xl font-bold text-primary sm:text-2xl">DV-TO-MP4 CONVERTER <span className="inline-block text-sm">v1.0</span></h1>
-            <a href="https://dv-to-mp4-converter.pages.dev/stats" className="mt-1 inline-block text-xs text-muted-foreground underline hover:text-primary">&gt; VIEW STATS</a>
           </header>
         </TerminalFrame>
 
